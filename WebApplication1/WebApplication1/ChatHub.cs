@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Net.WebSockets;
 using System.Text;
@@ -18,8 +21,54 @@ namespace WebApplication1
             Clients.All.broadcastMessage(name, message);
 
         }
+
+
+
+
+
+
+
+
+        private static List<object[]> getQuery(string message)
+        {
+            List<object[]> rows = new List<object[]>();
+
+            using (SqlConnection conn = new SqlConnection())
+            {
+                conn.ConnectionString = "SERVER=ps2db195000.database.windows.net;DATABASE=mk195000;USER ID=michal7018;PASSWORD=Michal7011;";
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(message, conn);
+
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        object[] temp = new object[reader.FieldCount];
+
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            temp[i] = reader[i];
+                        }
+                        rows.Add(temp);
+                    }
+                }
+            }
+            return rows;
+        }
+
+
+
+
+
+
+
+
+
+
+
     }
-
-
-
 }
