@@ -29,7 +29,6 @@ namespace WebApplication1
 
 
 
-
         private static List<object[]> getQuery(string message)
         {
             List<object[]> rows = new List<object[]>();
